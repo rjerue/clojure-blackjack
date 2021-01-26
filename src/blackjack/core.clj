@@ -80,7 +80,8 @@
 (defn game-loop "the game with bets" [money]
   (if (> money 0)
     (do
-      (println (str "You have $" money)) `(println "Place your bet:")
+      (println (str "You have $" money))
+      (println "Place your bet:")
       (try
         (let [bet (. Integer parseInt (read-line)) [d1 p1 d2 p2 & rest-deck] (make-deck)]
           (if (> bet money)
