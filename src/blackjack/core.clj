@@ -4,9 +4,11 @@
 
 (def suits #{:spade :clubs :hearts :diamonds})
 
+(range 1 5)
+
 (defn make-deck  "Makes a deck of cards"
   []
-  (-> (for [num (conj (range 1 11) 10 10 10)]
+  (-> (for [num (conj (range 1 11) 10 10 10)] ;; add other 10s for the 3 face cards
         (for [suit suits]
           {:suit suit :value num})) flatten shuffle))
 
