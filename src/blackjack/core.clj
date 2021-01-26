@@ -2,15 +2,18 @@
   (:gen-class)
   (:require [clojure.string :as s]))
 
-(def suits #{:spade :clubs :hearts :diamonds})
+(def suits [:spade :clubs :hearts :diamonds])
+(def card-values (into [10 10 10] (range 1 11)))
 
-(range 1 5)
+(def cards (map (fn [value] (map (fn [suit] (hash-map :value value :suit suit)) suits)) card-values))
+
+(defn make-card [suit value] (hash-map :suit suit :value value))
 
 (defn make-deck  "Makes a deck of cards"
   []
-  (-> (for [num (conj (range 1 11) 10 10 10)] ;; add other 10s for the 3 face cards
-        (for [suit suits]
-          {:suit suit :value num})) flatten shuffle))
+  (-> (for [suit suits value card-values] (make-card suit value))
+      flatten
+      shuffle))
 
 (defn sum-11 [deck]
   (reduce #(+ %1 (let [value (%2 :value)]
@@ -84,16 +87,16 @@
     (do
       (println (str "You have $" money)) `(println "Place your bet:")
       (try
-        (let [bet (. Integer parseInt (read-line)) [d1 p1 d2 p2 & rest] (make-deck)]
+        (let [bet (. Integer parseInt (read-line)) [d1 p1 d2 p2 & rest-deck] (make-deck)]
           (if (> bet money)
             (do
               (println "You bet too much!")
               (game-loop money))
-            (case (play-loop [p1 p2] [d1] (vec rest) bet d2)
-              :tie (game-loop money)
-              :dealer (game-loop (- money bet))
-              :player (game-loop (+ money bet)))))
-        (catch Exception e
+            (game-loop (case (play-loop [p1 p2] [d1] rest-deck bet d2)
+                         :tie money
+                         :dealer (- money bet)
+                         :player (+ money bet)))))
+        (catch Exception e ;; ex-info
           (println "Bad input")
           (game-loop money))))
     (println "You're broke. Goodnight!")))
