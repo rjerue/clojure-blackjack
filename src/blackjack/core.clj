@@ -5,10 +5,7 @@
 (def suits [:spade :clubs :hearts :diamonds])
 (def card-values (into [10 10 10] (range 1 11)))
 
-(def cards (map (fn [value] (map (fn [suit] (hash-map :value value :suit suit)) suits)) card-values))
-
-(defn make-card [suit value] (hash-map :suit suit :value value))
-
+(defn make-card [suit value] {:suit suit :value value})
 (defn make-deck  "Makes a deck of cards"
   []
   (-> (for [suit suits value card-values] (make-card suit value))
