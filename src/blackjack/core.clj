@@ -8,9 +8,7 @@
 (defn make-card [suit value] {:suit suit :value value})
 (defn make-deck  "Makes a deck of cards"
   []
-  (-> (for [suit suits value card-values] (make-card suit value))
-      flatten
-      shuffle))
+  (-> (for [suit suits value card-values] (make-card suit value)) shuffle))
 
 (defn sum-11 [deck]
   (reduce #(+ %1 (let [value (%2 :value)]
