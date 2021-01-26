@@ -88,7 +88,7 @@
             (do
               (println "You bet too much!")
               (game-loop money))
-            (game-loop (case (play-loop [p1 p2] [d1] rest-deck bet d2)
+            (game-loop (case (play-loop [p1 p2] [d1] (vec rest-deck) bet d2)
                          :tie money
                          :dealer (- money bet)
                          :player (+ money bet)))))
